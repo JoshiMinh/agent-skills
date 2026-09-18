@@ -4,78 +4,120 @@ A curated repository of production-grade agent skills designed for modern AI cod
 
 ---
 
-## Installation
+## Command Reference & Manual
 
-You can install skills from this repository using the official [skills CLI](https://skills.sh) (`skills` / `npx skills`) or manually via Git.
+Skills in this repository can be installed, updated, and managed using the official [skills CLI](https://skills.sh) (`npx skills`) or via direct file copy.
 
-### 1. Project-Level Installation (Current Workspace)
+### 1. Installation
 
-To install into the current project repository (`.agents/skills/`):
+#### Project-Level Installation (Current Workspace)
+Installs the skill into the current repository's `.agents/skills/` directory:
 
 ```bash
 # Install a specific skill as physical files (no symlinks)
 npx skills add JoshiMinh/agent-skills --skill website-compliance-auditor --copy -y
 
-# Install all skills from the repository
+# Install all skills from the repository into the current project
 npx skills add JoshiMinh/agent-skills --copy --all -y
 ```
 
-### 2. Global Installation (All Workspaces)
-
-To make skills available globally across all projects on your machine (`~/.agents/skills/`):
+#### Global Installation (Machine-Wide)
+Installs into your user directory (`~/.agents/skills/`), accessible across all projects:
 
 ```bash
-# Install a specific skill globally as physical files
+# Install a specific skill globally
 npx skills add JoshiMinh/agent-skills --skill website-compliance-auditor --global --copy -y
 
 # Install all skills globally
 npx skills add JoshiMinh/agent-skills --global --copy --all -y
 ```
 
-### 3. Targeting Specific AI Agents
-
-You can restrict the installation to specific coding agents:
+#### Targeting Specific Agents
+By default, skills are configured for all supported agents found on your machine. You can restrict installation to specific agents:
 
 ```bash
-# Target Google Antigravity and Claude Code specifically
+# Target Google Antigravity and Claude Code only
 npx skills add JoshiMinh/agent-skills --skill website-compliance-auditor --agent antigravity claude-code --copy -y
 
-# Target Cursor and GitHub Copilot
+# Target Cursor and GitHub Copilot only
 npx skills add JoshiMinh/agent-skills --skill website-compliance-auditor --agent cursor github-copilot --copy -y
 ```
 
-### 4. Updating Installed Skills
+---
+
+### 2. Updating Skills Across Projects
+
+When you make modifications to skills inside `JoshiMinh/agent-skills` and push them to GitHub, consuming projects can sync the latest changes with CLI commands:
+
+#### Step 1: Push Changes from the Source Repo
+```bash
+cd ~/.agents/agent-skills
+git add .
+git commit -m "feat(skill-name): update rules and guidelines"
+git push origin main
+```
+
+#### Step 2: Sync in Consuming Projects
+Navigate to any project repository that uses the skills and run:
 
 ```bash
-# Update skills in the current project
+# Update all installed skills in the current project to their latest upstream version
 npx skills update -p -y
 
-# Update skills globally
+# Or update a specific skill by name
+npx skills update website-compliance-auditor -y
+
+# Force-reinstall/overwrite with the latest version from GitHub
+npx skills add JoshiMinh/agent-skills --skill website-compliance-auditor --copy -y
+```
+
+#### Step 3: Sync Global Skills
+```bash
+# Update all globally installed skills to their latest upstream versions
 npx skills update -g -y
 ```
 
-### 5. Removing Skills
+---
+
+### 3. Listing & Inspecting Installed Skills
 
 ```bash
-# Remove from the current project
+# List skills installed in the current project
+npx skills list
+
+# List globally installed skills
+npx skills list -g
+
+# Search for skills interactively
+npx skills find
+```
+
+---
+
+### 4. Removing Skills
+
+```bash
+# Remove a skill from the current project
 npx skills remove website-compliance-auditor -y
 
-# Remove globally
+# Remove a skill globally
 npx skills remove website-compliance-auditor --global -y
 ```
 
-### 6. Manual Installation via Git / PowerShell
+---
 
-If you do not use `npx skills`, you can clone or copy directly into your target skills folder:
+### 5. Manual Installation (Without CLI)
+
+If working in an environment without Node.js / `npx`:
 
 ```powershell
 # Clone the repository locally
 git clone https://github.com/JoshiMinh/agent-skills.git
 
-# Copy skill to project directory
+# Copy skill to a project directory
 Copy-Item -Recurse .\agent-skills\skills\website-compliance-auditor .\my-project\.agents\skills\
 
-# Or copy to global Antigravity skills directory
+# Copy to Antigravity global skills directory
 Copy-Item -Recurse .\agent-skills\skills\website-compliance-auditor $HOME\.gemini\antigravity\skills\
 ```
 
@@ -91,7 +133,7 @@ Copy-Item -Recurse .\agent-skills\skills\website-compliance-auditor $HOME\.gemin
 
 ## Supported Agent Ecosystems
 
-Every skill in this repository complies with the universal `SKILL.md` specification:
+Every skill in this repository conforms to the universal `SKILL.md` format:
 
 - **Google Antigravity / Gemini Agents**: `.gemini/antigravity/skills/` or `.agents/skills/`
 - **Claude Code**: `.claude/skills/` or `.agents/skills/`
@@ -105,7 +147,7 @@ Every skill in this repository complies with the universal `SKILL.md` specificat
 
 Contributions and new skills are welcome:
 
-1. Create a new folder under `skills/<skill-name>/`
+1. Create a new directory under `skills/<skill-name>/`
 2. Add `skills/<skill-name>/SKILL.md` with standard YAML frontmatter:
    ```yaml
    ---
@@ -120,7 +162,7 @@ Contributions and new skills are welcome:
    ...
    ```
 3. Add the skill entry to the **Skills Catalog** table in this `README.md`.
-4. Submit a Pull Request.
+4. Open a Pull Request.
 
 ---
 
