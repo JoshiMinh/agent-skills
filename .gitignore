@@ -1,0 +1,20 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Node / package manager
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor & IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local agent caches
+.skill-lock.json
