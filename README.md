@@ -127,6 +127,9 @@ Copy-Item -Recurse .\agent-skills\skills\website-compliance-auditor $HOME\.gemin
 
 | Skill Name | Version | Description | Target Areas |
 | :--- | :---: | :--- | :--- |
+| [`clean-code-refactor`](./skills/clean-code-refactor/SKILL.md) | `1.0.0` | Best practices for clean, minimal, maintainable TypeScript/React code: dead code elimination, guard clauses, shallow nesting, and modular file budgets. | Refactoring, Clean Code, Performance |
+| [`monorepo-reusability`](./skills/monorepo-reusability/SKILL.md) | `1.0.0` | Guidelines for monorepo package architecture, cross-platform code sharing (Web, Expo, Extension), DRY abstractions, and workspace dependency management. | Architecture, Monorepo, Cross-Platform |
+| [`stackbase-license`](./skills/stackbase-license/SKILL.md) | `1.0.0` | Proprietary software licensing, StackBase LLC copyright compliance, third-party OSS dependency auditing (blocking viral copyleft), and secret isolation. | Licensing, Compliance, Security |
 | [`website-compliance-auditor`](./skills/website-compliance-auditor/SKILL.md) | `2.0.0` | Comprehensive website compliance doctor auditing WCAG 2.1/2.2 AA accessibility, GDPR/CCPA privacy, cookie consent, consumer trust, and security headers. | Accessibility, Privacy, Legal, Security |
 
 ---
