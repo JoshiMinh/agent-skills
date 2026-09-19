@@ -21,15 +21,6 @@ npx skills add JoshiMinh/agent-skills --skill <skill-name> --copy -y
 npx skills add JoshiMinh/agent-skills --global --copy -y
 ```
 
-### Supported Skills
-
-| Skill | Category | Description |
-| :--- | :--- | :--- |
-| `clean-code-refactor` | Refactoring | Dead code elimination, guard clauses, minimal abstractions, and file budgets. |
-| `monorepo-reusability` | Architecture | Unidirectional layering, cross-platform code sharing (Web, Expo, Extension). |
-| `stackbase-license` | Compliance | Proprietary copyright headers, OSS license vetting (GPL/AGPL blocking), secret safety. |
-| `website-compliance-auditor` | Security & Legal | Audits WCAG 2.1/2.2 AA accessibility, GDPR/CCPA privacy, cookie consent, and headers. |
-
 ---
 
 ## Skill Updates
