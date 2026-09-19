@@ -169,7 +169,7 @@
       <input 
         type="text" 
         id="searchInput" 
-        placeholder="Search skills or keywords..." 
+        placeholder="Search skills or keywords... (⌘K)" 
         class="w-full bg-surface border border-border rounded-lg pl-8 pr-7 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
         oninput="filterSkills()"
       >
@@ -214,8 +214,13 @@
 
   <!-- Skills Grid -->
   <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1">
-    <div id="skillsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- Injected by JavaScript -->
+    <div id="loadingIndicator" class="text-center py-16 text-zinc-500 text-xs sm:text-sm">
+      <div class="inline-block animate-spin w-5 h-5 border-2 border-zinc-500 border-t-blue-500 rounded-full mb-3"></div>
+      <p>Fetching skills directly from repository...</p>
+    </div>
+
+    <div id="skillsGrid" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Dynamically Injected Cards -->
     </div>
 
     <div id="noResults" class="hidden text-center py-16 text-zinc-500 text-sm">
@@ -257,266 +262,125 @@
     <p>Agent Skills by <a href="https://github.com/JoshiMinh" target="_blank" class="text-zinc-400 hover:text-white underline">JoshiMinh</a> • Licensed under MIT</p>
   </footer>
 
-  <!-- Embedded Skills Data & Logic -->
+  <!-- 100% Dynamic Direct Fetch & Parser -->
   <script>
-    const INITIAL_SKILLS = [
-      {
-        slug: 'clean-code-refactor',
-        name: 'clean-code-refactor',
-        category: 'Refactoring',
-        version: '1.0.0',
-        author: 'stackbase',
-        description: 'Best practices and actionable rules for writing clean, minimal, maintainable, and high-performance TypeScript/React code: dead code elimination, guard clauses, minimal abstractions, and modular file budgets.',
-        path: 'skills/clean-code-refactor/SKILL.md',
-        rawMarkdown: `# Clean Code & Minimal Refactoring
-
-Architectural guide and checklist for maintaining lean, readable, and robust TypeScript/React codebases across StackBase applications.
-
----
-
-## 1. Core Principles
-
-1. **Minimal Abstraction over Premature Engineering**
-   - Do NOT create wrappers around native libraries or well-designed primitives unless adding significant domain value.
-   - Avoid "pass-through" functions or components whose only job is to forward arguments to another function.
-   - Resist building generic frameworks for one-off features. Three concrete implementations are better than one premature abstraction.
-
-2. **File & Function Size Budgets**
-   - **Functions**: Target $\\le$ 30–40 lines of focused logic.
-   - **Components**: Target $\\le$ 150–250 lines per file. Break complex sub-sections into colocated sub-components.
-   - **Files**: If a file exceeds 300 lines, evaluate splitting domain types, helpers, or hooks into separate modules.
-
-3. **Colocation First**
-   - Place types, utility helpers, and hooks near where they are used.
-   - Promote to shared packages or top-level \`lib/\` or \`packages/\` ONLY when reused in $\\ge$ 2 independent features or packages.
-
-4. **Dead Code Elimination**
-   - Never leave commented-out code blocks, unused imports, zombie variables, or deprecated type definitions.
-   - Remove dead code immediately rather than hoarding it "for later" (Git history preserves all changes).
-
----
-
-## 2. Control Flow & Complexity Reduction
-
-- **Early Returns & Guard Clauses**: Flatten deeply nested \`if/else\` structures.
-- **Avoid Nested Ternaries**: Never chain ternary operators (\`a ? b : c ? d : e\`). Use standard \`if/else\` or lookup tables.
-- **Lookup Maps over Long Switches**: Prefer \`Record<Key, Value>\` or \`Map\` objects over 20+ line \`switch/case\` statements.
-- **Explicit Boolean Conditions**: Avoid ambiguous truthy checks on numbers or strings (\`if (count)\` vs \`if (count > 0)\`).
-
----
-
-## 3. React & State Hygiene
-
-- **Keep State Local**: Keep state as close as possible to the leaves of the render tree to avoid unnecessary parent re-renders.
-- **Derived State**: Never duplicate props or existing state into a new \`useState\`. Compute values during render or wrap in \`useMemo\` if computationally expensive.
-- **Clean Effect Dependencies**: Every \`useEffect\` should have a single responsibility. Never synchronize state across components using chaining \`useEffect\` hooks.
-- **Strict Typing**: Never use \`any\`. Use \`unknown\` with type guards (\`is\` predicates) or Zod schemas for external payloads.
-
----
-
-## 4. Refactoring Checklist
-
-- [ ] Has dead code, unused imports, or unused props been removed?
-- [ ] Are all functions under 40 lines with a single clear purpose?
-- [ ] Are deeply nested conditionals replaced with early return guard clauses?
-- [ ] Is state minimal and non-redundant (derived values computed instead of synced)?
-- [ ] Are types strict without \`any\` or loose type assertions (\`as unknown as T\`)?`
-      },
-      {
-        slug: 'monorepo-reusability',
-        name: 'monorepo-reusability',
-        category: 'Architecture',
-        version: '1.0.0',
-        author: 'stackbase',
-        description: 'Guidelines and best practices for monorepo package architecture, cross-platform code sharing (Web, Expo Mobile, Browser Extension), DRY abstractions, and workspace dependency management in StackBase monorepos.',
-        path: 'skills/monorepo-reusability/SKILL.md',
-        rawMarkdown: `# Monorepo Package Reusability & Cross-Platform Architecture
-
-Engineering manual for designing modular, DRY, and cross-platform shared packages across StackBase monorepo projects.
-
----
-
-## 1. Monorepo Layering Matrix
-
-All code within the monorepo must respect a strict unidirectional dependency graph:
-
-\`\`\`
-[apps/web]      [apps/mobile]      [apps/extension]
-    │                │                   │
-    ▼                ▼                   ▼
-[@<repo>/ui]   [@<repo>/supabase]   [@<repo>/auth]
-    │                │                   │
-    └────────────────┼───────────────────┘
-                     ▼
-             [@<repo>/utils]
-                     ▼
-             [@<repo>/types]
-\`\`\`
-
-1. **\`@<repo>/types\` (Level 0 - Foundation)**:
-   - Pure TypeScript types and interfaces.
-   - Zero runtime JavaScript dependencies.
-   - No React, Node.js, or platform-specific dependencies.
-
-2. **\`@<repo>/utils\` (Level 1 - Pure Logic)**:
-   - Platform-agnostic pure helper functions (formatting, date calculations, validation, math).
-   - Safe to run in any JS environment (Browser, Node.js, Cloudflare Workers, React Native, Chrome Extension Service Worker).
-
-3. **\`@<repo>/ui\` (Level 2 - Design System Primitives)**:
-   - Reusable UI component contracts and design tokens.
-   - Web implementations use Radix UI / Tailwind CSS; platform-specific variations are cleanly abstracted.
-
-4. **\`@<repo>/supabase\` / \`@<repo>/auth\` (Level 2 - Backend & Data Client)**:
-   - Typed data queries, client factories, and authentication state helpers.
-
-5. **\`apps/*\` (Level 3 - Product Surfaces)**:
-   - Product-specific routes, pages, and feature composition.
-
----
-
-## 2. Cross-Platform Sharing Rules
-
-- **Zero Node.js Built-in Leaks**: Shared packages must never import Node-only modules (\`fs\`, \`path\`, \`crypto\`, \`os\`) unless scoped strictly to server-only entry points.
-- **Universal Code Isolation**: Isolate web-specific DOM APIs (\`window\`, \`document\`, \`localStorage\`) and mobile-specific APIs (\`AsyncStorage\`, \`SecureStore\`) behind standard interface adapters.
-- **No Circular Workspace Dependencies**: A package must NEVER import from a package that depends on it.
-- **Explicit Exports**: Always define explicit entry points in each package's \`package.json\` \`exports\` map rather than allowing arbitrary deep path imports.
-
----
-
-## 3. Package Reusability Checklist
-
-- [ ] Does the shared package have a single, well-defined responsibility?
-- [ ] Are types placed in \`@<repo>/types\` without bundling unnecessary runtime dependencies?
-- [ ] Are workspace dependencies pinned using \`workspace:*\` in \`package.json\`?
-- [ ] Is there zero circular dependency between packages or applications?
-- [ ] Can the shared utility run cleanly across Web, Mobile (Expo), and Extension targets?`
-      },
-      {
-        slug: 'stackbase-license',
-        name: 'stackbase-license',
-        category: 'Compliance',
-        version: '1.0.0',
-        author: 'stackbase',
-        description: 'Proprietary software licensing, StackBase Inc. copyright compliance, third-party open-source dependency auditing, and intellectual property protection across StackBase repositories.',
-        path: 'skills/stackbase-license/SKILL.md',
-        rawMarkdown: `# StackBase License & IP Guardian
-
-Standards for proprietary intellectual property protection, copyright notices, and third-party open-source license compliance across StackBase repositories.
-
----
-
-## 1. Proprietary Software Notice
-
-All source code across StackBase repositories (\`WatchBase\`, \`RateBase\`, \`TaskBase\`, \`MarkBase\`, \`WriteBase\`) is proprietary and confidential to **StackBase Inc.** / **TheBase Platforms LLC**.
-
-### Standard Copyright Header
-When creating new source files, major modules, or standalone packages, include the proprietary notice comment at the top where applicable:
-
-\`\`\`typescript
-/**
- * Copyright © 2026 StackBase Inc. All rights reserved.
- * Confidential and proprietary.
- */
-\`\`\`
-
----
-
-## 2. Third-Party Open Source Compliance
-
-To protect StackBase's proprietary source code from accidental open-source copyleft contamination:
-
-### Permitted Licenses (Safe for Commercial Proprietary Code)
-- **MIT License** (\`MIT\`)
-- **Apache License 2.0** (\`Apache-2.0\`)
-- **BSD 2-Clause / 3-Clause** (\`BSD-2-Clause\`, \`BSD-3-Clause\`)
-- **ISC License** (\`ISC\`)
-- **CC0 / Unlicense** (\`CC0-1.0\`, \`Unlicense\`)
-
-### Prohibited / Restricted Licenses (Copyleft Contamination)
-- ❌ **GPL (General Public License)** (\`GPL-2.0\`, \`GPL-3.0\`)
-- ❌ **AGPL (Affero General Public License)** (\`AGPL-3.0\`)
-- ❌ **SSPL (Server Side Public License)**
-- ⚠️ **LGPL / MPL**: Permitted only as dynamically linked unmodified external packages; never vendor or directly incorporate source code into StackBase repos without legal review.
-
----
-
-## 3. Secret & Credential Leakage Protection
-
-- **No Hardcoded Secrets**: Never commit API keys, service role keys, webhook signing secrets, database passwords, or private SSH keys.
-- **Environment Isolation**: Always use \`.env.example\` templates with empty placeholders (\`SUPABASE_SERVICE_ROLE_KEY=\`) and keep actual secrets inside \`.env.local\` (which must be ignored in \`.gitignore\`).
-- **Client Bundle Safety**: Only environment variables explicitly prefixed with public markers (e.g. \`NEXT_PUBLIC_*\`, \`EXPO_PUBLIC_*\`) are exposed to client browsers. Never expose backend admin credentials to the client.
-
----
-
-## 4. Compliance Checklist
-
-- [ ] Are all third-party dependencies licensed under permissive licenses (MIT, Apache 2.0, BSD, ISC)?
-- [ ] Is there zero presence of viral copyleft packages (GPL/AGPL)?
-- [ ] Are proprietary notices preserved in root \`LICENSE\` and documentation?
-- [ ] Are all sensitive credentials, database URLs, and API tokens loaded strictly via environment variables?`
-      },
-      {
-        slug: 'website-compliance-auditor',
-        name: 'website-compliance-auditor',
-        category: 'Security & Legal',
-        version: '2.0.0',
-        author: 'JoshiMinh',
-        description: 'Comprehensive website compliance and audit skill covering WCAG 2.1/2.2 AA accessibility, GDPR/CCPA privacy and cookie consent, consumer protection, legal terms, web security headers, and trust verification. Triggers for: website audits, accessibility checks (a11y), contrast ratios, keyboard navigation, cookie consent banners, privacy policies, terms of service, refund policies, tracking scripts audit, and security headers (CSP/HSTS).',
-        path: 'skills/website-compliance-auditor/SKILL.md',
-        rawMarkdown: `# Website Compliance & Accessibility Auditor
-
-A production-grade audit skill to evaluate websites and web applications for **Accessibility (WCAG 2.1 & 2.2 AA)**, **Privacy & Data Protection (GDPR / CCPA / ePrivacy)**, **Consumer Trust & Legal Compliance (Terms, Refunds, Business Identity)**, and **Web Security Hygiene (Headers & CSP)**.
-
----
-
-## Audit Principles
-
-1. **Practical & Context-Aware**: Only evaluate checks that apply to the current website (e.g., do not flag missing refund policies on open-source landing pages or non-commercial blogs).
-2. **Actionable Remediation**: Every warning or failure must include a precise explanation and a copy-pasteable code fix (React/Next.js, HTML, CSS/Tailwind, or config).
-3. **Hybrid Verification**: Combine static code analysis (JSX semantics, Next.js config, Tailwind classes) with live DOM/network inspection (via Chrome DevTools MCP or browser testing).
-
----
-
-## 1. Core Accessibility Checks (Always Review)
-
-- **Colour Contrast (WCAG 1.4.3 & 1.4.11)**: Minimum 4.5:1 for normal text, 3.0:1 for large text.
-- **Alt Text & Image Semantics (WCAG 1.1.1)**: Descriptive alt tags on informational images; \`alt=""\` or \`aria-hidden="true"\` on decorative graphics.
-- **Keyboard Accessibility (WCAG 2.1.1, 2.4.7)**: Complete keyboard navigation without mouse; high-contrast visible focus indicators.
-- **Target Size (WCAG 2.2)**: Minimum 24x24px click target bounds (44x44px recommended).
-
----
-
-## 2. Privacy & Data Protection (GDPR, CCPA)
-
-- **Privacy Policy Link**: Clear, easily accessible footer link disclosing categories, controller contact, retention, and deletion rights.
-- **Cookie Consent Banner**: Explicit opt-in prior to initializing non-essential analytics or advertising pixels.
-- **Google Consent Mode v2**: Default-denied storage signals configured before script evaluation.
-
----
-
-## 3. Consumer Trust & Legal Compliance
-
-- **Terms of Service**: Clear acceptable use, liability limitations, and account termination policies.
-- **Refund & Cancellation Policy**: Clear disclosure of billing cycles, cancellation methods, and refund windows.
-- **Business Identity**: Verified electronic contact information and business registration where applicable.
-
----
-
-## 4. Web Security Headers & Network Hygiene
-
-| Security Header | Recommended Configuration | Purpose |
-| :--- | :--- | :--- |
-| **Content-Security-Policy** | \`default-src 'self'; script-src 'self' 'unsafe-inline';\` | Prevents XSS and malicious script execution. |
-| **Strict-Transport-Security** | \`max-age=63072000; includeSubDomains; preload\` | Enforces HTTPS. |
-| **X-Frame-Options** | \`DENY\` or \`SAMEORIGIN\` | Mitigates clickjacking. |
-| **X-Content-Type-Options** | \`nosniff\` | Blocks MIME-type sniffing. |`
-      }
+    const REPO_OWNER = 'JoshiMinh';
+    const REPO_NAME = 'agent-skills';
+
+    // Known skills list fallback if GitHub API rate-limits
+    const KNOWN_SLUGS = [
+      'clean-code-refactor',
+      'monorepo-reusability',
+      'stackbase-license',
+      'website-compliance-auditor'
     ];
 
-    let loadedSkills = INITIAL_SKILLS.map(s => ({
-      ...s,
-      html: marked.parse(s.rawMarkdown)
-    }));
+    let loadedSkills = [];
+
+    // Parse YAML frontmatter from raw markdown
+    function parseFrontmatter(raw) {
+      const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+      if (!match) {
+        return { frontmatter: {}, body: raw };
+      }
+
+      const yamlBlock = match[1];
+      const body = match[2];
+      const frontmatter = {};
+
+      yamlBlock.split(/\r?\n/).forEach(line => {
+        const colonIdx = line.indexOf(':');
+        if (colonIdx > 0) {
+          const key = line.slice(0, colonIdx).trim();
+          let val = line.slice(colonIdx + 1).trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.slice(1, -1);
+          }
+          frontmatter[key] = val;
+        }
+      });
+
+      return { frontmatter, body };
+    }
+
+    // Try fetching with multiple URL fallback paths (Relative -> GitHub Raw -> CDN)
+    async function fetchRawMarkdown(slug) {
+      const candidates = [
+        `./skills/${slug}/SKILL.md`,
+        `skills/${slug}/SKILL.md`,
+        `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/skills/${slug}/SKILL.md`,
+        `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@main/skills/${slug}/SKILL.md`
+      ];
+
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            return await res.text();
+          }
+        } catch (e) {
+          // Try next candidate
+        }
+      }
+      throw new Error(`Could not fetch SKILL.md for ${slug}`);
+    }
+
+    // Discover skill directories via GitHub API, or fallback to known list
+    async function discoverSkillSlugs() {
+      try {
+        const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/skills`;
+        const res = await fetch(apiUrl);
+        if (res.ok) {
+          const items = await res.json();
+          return items.filter(i => i.type === 'dir').map(i => i.name);
+        }
+      } catch (e) {
+        console.warn('GitHub API discovery skipped, using catalog fallback');
+      }
+      return KNOWN_SLUGS;
+    }
+
+    // Main fetch & render routine
+    async function loadSkillsDirectly() {
+      const slugs = await discoverSkillSlugs();
+      const results = await Promise.all(
+        slugs.map(async (slug) => {
+          try {
+            const raw = await fetchRawMarkdown(slug);
+            const { frontmatter, body } = parseFrontmatter(raw);
+            
+            return {
+              slug: slug,
+              name: frontmatter.name || slug,
+              description: frontmatter.description || '',
+              version: (frontmatter.metadata && frontmatter.metadata.version) || '1.0.0',
+              author: (frontmatter.metadata && frontmatter.metadata.author) || 'JoshiMinh',
+              category: deriveCategory(slug, frontmatter.description || ''),
+              path: `skills/${slug}/SKILL.md`,
+              rawMarkdown: body,
+              html: marked.parse(body)
+            };
+          } catch (err) {
+            console.error(err);
+            return null;
+          }
+        })
+      );
+
+      loadedSkills = results.filter(Boolean);
+      document.getElementById('loadingIndicator').classList.add('hidden');
+      document.getElementById('skillsGrid').classList.remove('hidden');
+      renderSkills();
+    }
+
+    function deriveCategory(slug, desc) {
+      const text = (slug + ' ' + desc).toLowerCase();
+      if (text.includes('refactor') || text.includes('clean code')) return 'Refactoring';
+      if (text.includes('monorepo') || text.includes('architecture') || text.includes('package')) return 'Architecture';
+      if (text.includes('license') || text.includes('copyright') || text.includes('proprietary')) return 'Compliance';
+      if (text.includes('compliance') || text.includes('accessibility') || text.includes('wcag') || text.includes('security')) return 'Security & Legal';
+      return 'Engineering';
+    }
 
     function renderSkills() {
       const grid = document.getElementById('skillsGrid');
@@ -547,7 +411,7 @@ A production-grade audit skill to evaluate websites and web applications for **A
       document.getElementById('noResults').classList.add('hidden');
 
       grid.innerHTML = filtered.map(skill => {
-        const installCmd = `npx skills add JoshiMinh/agent-skills --skill ${skill.slug} --copy -y`;
+        const installCmd = `npx skills add ${REPO_OWNER}/${REPO_NAME} --skill ${skill.slug} --copy -y`;
         return `
           <div class="bg-surface border border-border hover:border-zinc-700 rounded-xl p-5 flex flex-col justify-between transition-all group shadow-sm hover:shadow-md">
             <div>
@@ -618,7 +482,7 @@ A production-grade audit skill to evaluate websites and web applications for **A
       document.getElementById('modalPath').innerText = skill.path;
       document.getElementById('modalContent').innerHTML = skill.html;
 
-      const installCmd = `npx skills add JoshiMinh/agent-skills --skill ${skill.slug} --copy -y`;
+      const installCmd = `npx skills add ${REPO_OWNER}/${REPO_NAME} --skill ${skill.slug} --copy -y`;
       const copyBtn = document.getElementById('modalCopyBtn');
       copyBtn.onclick = () => copyCommand(installCmd, copyBtn);
 
@@ -650,8 +514,8 @@ A production-grade audit skill to evaluate websites and web applications for **A
       }
     });
 
-    // Initialize
-    renderSkills();
+    // Run dynamic fetch on load
+    loadSkillsDirectly();
   </script>
 </body>
 </html>
