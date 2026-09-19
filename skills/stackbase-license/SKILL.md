@@ -1,6 +1,6 @@
 ---
 name: stackbase-license
-description: "Proprietary software licensing, StackBase LLC copyright compliance, third-party open-source dependency auditing, and intellectual property protection across StackBase repositories."
+description: "Proprietary software licensing, StackBase Inc. copyright compliance, third-party open-source dependency auditing, and intellectual property protection across StackBase repositories."
 metadata:
   author: stackbase
   version: "1.0.0"
@@ -14,14 +14,14 @@ Standards for proprietary intellectual property protection, copyright notices, a
 
 ## 1. Proprietary Software Notice
 
-All source code across StackBase repositories (`WatchBase`, `RateBase`, `TaskBase`, `MarkBase`, `WriteBase`) is proprietary and confidential to **StackBase LLC** / **TheBase Platforms LLC**.
+All source code across StackBase repositories (`WatchBase`, `RateBase`, `TaskBase`, `MarkBase`, `WriteBase`) is proprietary and confidential to **StackBase Inc.** / **TheBase Platforms LLC**.
 
 ### Standard Copyright Header
 When creating new source files, major modules, or standalone packages, include the proprietary notice comment at the top where applicable:
 
 ```typescript
 /**
- * Copyright © 2026 StackBase LLC. All rights reserved.
+ * Copyright © 2026 StackBase Inc. All rights reserved.
  * Confidential and proprietary.
  */
 ```

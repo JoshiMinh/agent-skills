@@ -6,6 +6,9 @@
   <title>Agent Skills — Production-Grade AI Agent Skills</title>
   <meta name="description" content="Curated production-grade AI agent skills for Google Antigravity, Claude Code, Cursor, and open agent ecosystems.">
   
+  <!-- Modern SVG Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m18 16 4-4-4-4'/%3E%3Cpath d='m6 8-4 4 4 4'/%3E%3Cpath d='m14.5 4-5 16'/%3E%3C/svg%3E">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -146,9 +149,10 @@
 </head>
 <body class="min-h-screen flex flex-col bg-background text-zinc-100 antialiased selection:bg-blue-600 selection:text-white">
 
-  <!-- Header (No Logo - Clean Typography Only) -->
-  <header class="sticky top-0 z-40 glass-header px-4 lg:px-8 py-3.5 flex items-center justify-between">
-    <div class="flex items-center gap-2.5">
+  <!-- Header with integrated search bar -->
+  <header class="sticky top-0 z-40 glass-header px-4 lg:px-8 py-3 flex items-center justify-between gap-4">
+    <!-- Brand -->
+    <div class="flex items-center gap-2.5 shrink-0">
       <a href="./" class="font-semibold text-sm tracking-tight text-white hover:text-zinc-200 transition-colors">
         agent-skills
       </a>
@@ -157,73 +161,54 @@
       </span>
     </div>
 
-    <div class="flex items-center gap-3">
-      <a href="https://github.com/JoshiMinh/agent-skills" target="_blank" rel="noopener noreferrer" class="text-xs px-3 py-1.5 rounded-lg border border-border bg-surfaceSecondary hover:bg-zinc-800 text-zinc-300 transition-colors flex items-center gap-2">
-        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+    <!-- Search in Topbar -->
+    <div class="relative flex-1 max-w-sm mx-auto">
+      <svg class="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Search skills or keywords..." 
+        class="w-full bg-surface border border-border rounded-lg pl-8 pr-7 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+        oninput="filterSkills()"
+      >
+      <button 
+        id="clearSearchBtn" 
+        onclick="clearSearch()" 
+        class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-0.5 rounded"
+      >
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- GitHub Link -->
+    <div class="flex items-center gap-3 shrink-0">
+      <a href="https://github.com/JoshiMinh/agent-skills" target="_blank" rel="noopener noreferrer" class="text-xs px-3 py-1.5 rounded-lg border border-border bg-surfaceSecondary hover:bg-zinc-800 text-zinc-300 transition-colors flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         <span>GitHub</span>
       </a>
     </div>
   </header>
 
-  <!-- Hero Banner -->
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 text-center">
-    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-400 text-xs font-medium mb-4">
-      Universal Agent Skills Catalog
-    </div>
-    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
-      Production-Grade AI Agent Skills
-    </h2>
-    <p class="text-zinc-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed mb-6">
-      Standardized engineering specifications and behavioral playbooks for Google Antigravity, Claude Code, Cursor, and open AI agent workflows.
+  <!-- Clean Page Header -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 text-center">
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white mb-2.5">
+      Production AI Agent Skills
+    </h1>
+    <p class="text-zinc-400 max-w-lg mx-auto text-xs sm:text-sm leading-relaxed mb-6">
+      Standardized engineering playbooks for Antigravity, Claude Code, Cursor, and autonomous agent workflows.
     </p>
 
     <!-- Global Quick Install Bar -->
-    <div class="max-w-lg mx-auto bg-surface border border-border rounded-xl p-2 flex items-center justify-between shadow-2xl">
+    <div class="max-w-md mx-auto bg-surface border border-border rounded-lg p-1.5 flex items-center justify-between shadow-lg">
       <div class="flex items-center gap-2 pl-2 overflow-x-auto text-xs font-mono text-zinc-300 select-all">
         <span class="text-zinc-500">$</span>
         <span>npx skills add JoshiMinh/agent-skills --copy -y</span>
       </div>
-      <button onclick="copyCommand('npx skills add JoshiMinh/agent-skills --copy -y', this)" class="shrink-0 ml-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-medium rounded-lg transition-all">
-        Copy All
+      <button onclick="copyCommand('npx skills add JoshiMinh/agent-skills --copy -y', this)" class="shrink-0 ml-2 px-2.5 py-1 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-medium rounded-md transition-all">
+        Copy
       </button>
-    </div>
-  </section>
-
-  <!-- Controls: Search & Category Filters -->
-  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-    <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
-      <!-- Search Input -->
-      <div class="relative flex-1 max-w-sm">
-        <svg class="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="Search skills, principles, or keywords..." 
-          class="w-full bg-surface border border-border rounded-lg pl-9 pr-4 py-2 text-xs sm:text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-          oninput="filterSkills()"
-        >
-      </div>
-
-      <!-- Categories -->
-      <div class="flex flex-wrap items-center gap-1.5" id="categoryFilters">
-        <button onclick="setCategory('all')" class="category-btn active px-3 py-1.5 rounded-lg text-xs font-medium border border-blue-500 bg-blue-500/10 text-blue-400 transition-all" data-category="all">
-          All (<span id="count-all">4</span>)
-        </button>
-        <button onclick="setCategory('Refactoring')" class="category-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-surface text-zinc-400 hover:text-zinc-200 transition-all" data-category="Refactoring">
-          Refactoring (<span id="count-refactoring">1</span>)
-        </button>
-        <button onclick="setCategory('Architecture')" class="category-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-surface text-zinc-400 hover:text-zinc-200 transition-all" data-category="Architecture">
-          Architecture (<span id="count-architecture">1</span>)
-        </button>
-        <button onclick="setCategory('Compliance')" class="category-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-surface text-zinc-400 hover:text-zinc-200 transition-all" data-category="Compliance">
-          Compliance (<span id="count-compliance">1</span>)
-        </button>
-        <button onclick="setCategory('Security & Legal')" class="category-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-surface text-zinc-400 hover:text-zinc-200 transition-all" data-category="Security & Legal">
-          Security & Legal (<span id="count-security">1</span>)
-        </button>
-      </div>
     </div>
   </section>
 
@@ -234,7 +219,7 @@
     </div>
 
     <div id="noResults" class="hidden text-center py-16 text-zinc-500 text-sm">
-      No agent skills match your query.
+      No agent skills match your search.
     </div>
   </main>
 
@@ -272,7 +257,7 @@
     <p>Agent Skills by <a href="https://github.com/JoshiMinh" target="_blank" class="text-zinc-400 hover:text-white underline">JoshiMinh</a> • Licensed under MIT</p>
   </footer>
 
-  <!-- Embedded Skills Data & Logic (100% Reliable Instant Fetch & Offline Support) -->
+  <!-- Embedded Skills Data & Logic -->
   <script>
     const INITIAL_SKILLS = [
       {
@@ -281,7 +266,7 @@
         category: 'Refactoring',
         version: '1.0.0',
         author: 'stackbase',
-        description: 'Best practices and actionable rules for writing clean, minimal, maintainable, and high-performance TypeScript/React code. Triggers for: code refactoring, dead code elimination, reducing cognitive complexity, preventing wrapper/abstraction bloat, optimizing control flow, and keeping file sizing modular.',
+        description: 'Best practices and actionable rules for writing clean, minimal, maintainable, and high-performance TypeScript/React code: dead code elimination, guard clauses, minimal abstractions, and modular file budgets.',
         path: 'skills/clean-code-refactor/SKILL.md',
         rawMarkdown: `# Clean Code & Minimal Refactoring
 
@@ -412,7 +397,7 @@ All code within the monorepo must respect a strict unidirectional dependency gra
         category: 'Compliance',
         version: '1.0.0',
         author: 'stackbase',
-        description: 'Proprietary software licensing, StackBase LLC copyright compliance, third-party open-source dependency auditing, and intellectual property protection across StackBase repositories.',
+        description: 'Proprietary software licensing, StackBase Inc. copyright compliance, third-party open-source dependency auditing, and intellectual property protection across StackBase repositories.',
         path: 'skills/stackbase-license/SKILL.md',
         rawMarkdown: `# StackBase License & IP Guardian
 
@@ -422,14 +407,14 @@ Standards for proprietary intellectual property protection, copyright notices, a
 
 ## 1. Proprietary Software Notice
 
-All source code across StackBase repositories (\`WatchBase\`, \`RateBase\`, \`TaskBase\`, \`MarkBase\`, \`WriteBase\`) is proprietary and confidential to **StackBase LLC** / **TheBase Platforms LLC**.
+All source code across StackBase repositories (\`WatchBase\`, \`RateBase\`, \`TaskBase\`, \`MarkBase\`, \`WriteBase\`) is proprietary and confidential to **StackBase Inc.** / **TheBase Platforms LLC**.
 
 ### Standard Copyright Header
 When creating new source files, major modules, or standalone packages, include the proprietary notice comment at the top where applicable:
 
 \`\`\`typescript
 /**
- * Copyright © 2026 StackBase LLC. All rights reserved.
+ * Copyright © 2026 StackBase Inc. All rights reserved.
  * Confidential and proprietary.
  */
 \`\`\`
@@ -533,19 +518,24 @@ A production-grade audit skill to evaluate websites and web applications for **A
       html: marked.parse(s.rawMarkdown)
     }));
 
-    let activeCategory = 'all';
-
     function renderSkills() {
       const grid = document.getElementById('skillsGrid');
-      const query = (document.getElementById('searchInput').value || '').toLowerCase();
+      const input = document.getElementById('searchInput');
+      const clearBtn = document.getElementById('clearSearchBtn');
+      const query = (input.value || '').trim().toLowerCase();
       
+      if (query) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
       const filtered = loadedSkills.filter(skill => {
-        const matchesCategory = activeCategory === 'all' || skill.category === activeCategory;
-        const matchesQuery = !query || 
+        return !query || 
           skill.name.toLowerCase().includes(query) || 
+          skill.category.toLowerCase().includes(query) || 
           skill.description.toLowerCase().includes(query) || 
           skill.rawMarkdown.toLowerCase().includes(query);
-        return matchesCategory && matchesQuery;
       });
 
       if (filtered.length === 0) {
@@ -598,19 +588,14 @@ A production-grade audit skill to evaluate websites and web applications for **A
       }).join('');
     }
 
-    function setCategory(cat) {
-      activeCategory = cat;
-      document.querySelectorAll('.category-btn').forEach(btn => {
-        if (btn.dataset.category === cat) {
-          btn.className = 'category-btn active px-3 py-1.5 rounded-lg text-xs font-medium border border-blue-500 bg-blue-500/10 text-blue-400 transition-all';
-        } else {
-          btn.className = 'category-btn px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-surface text-zinc-400 hover:text-zinc-200 transition-all';
-        }
-      });
+    function filterSkills() {
       renderSkills();
     }
 
-    function filterSkills() {
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      input.focus();
       renderSkills();
     }
 
@@ -659,27 +644,14 @@ A production-grade audit skill to evaluate websites and web applications for **A
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
-    });
-
-    // Dynamic Live Fallback: Fetch latest markdown if available
-    async function liveSyncSkills() {
-      for (const item of loadedSkills) {
-        try {
-          const res = await fetch(`./${item.path}`);
-          if (res.ok) {
-            const text = await res.text();
-            item.rawMarkdown = text;
-            item.html = marked.parse(text);
-          }
-        } catch (e) {
-          // Ignore - using embedded fallback
-        }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        document.getElementById('searchInput').focus();
       }
-    }
+    });
 
     // Initialize
     renderSkills();
-    liveSyncSkills();
   </script>
 </body>
 </html>
