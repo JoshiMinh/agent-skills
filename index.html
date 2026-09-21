@@ -272,6 +272,7 @@
       'clean-code-refactor',
       'monorepo-reusability',
       'stackbase-license',
+      'web-extension-auditor',
       'website-compliance-auditor'
     ];
 
@@ -375,6 +376,7 @@
 
     function deriveCategory(slug, desc) {
       const text = (slug + ' ' + desc).toLowerCase();
+      if (text.includes('extension') || text.includes('manifest')) return 'WebExtension';
       if (text.includes('refactor') || text.includes('clean code')) return 'Refactoring';
       if (text.includes('monorepo') || text.includes('architecture') || text.includes('package')) return 'Architecture';
       if (text.includes('license') || text.includes('copyright') || text.includes('proprietary')) return 'Compliance';
