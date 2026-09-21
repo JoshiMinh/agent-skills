@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "targets": {
+    "codex": {
+      "path": "%USERPROFILE%\\.agents\\skills",
+      "description": "Codex user-wide skills; also the shared .agents convention used by compatible editors."
+    },
+    "antigravity": {
+      "path": "%USERPROFILE%\\.gemini\\config\\skills",
+      "registration_path": "%USERPROFILE%\\.gemini\\config\\skills.json",
+      "description": "Antigravity machine-global customization directory, explicitly registered for reliable IDE discovery."
+    },
+    "claude-code": {
+      "path": "%USERPROFILE%\\.claude\\skills",
+      "description": "Claude Code personal skills directory."
+    }
+  }
+}
