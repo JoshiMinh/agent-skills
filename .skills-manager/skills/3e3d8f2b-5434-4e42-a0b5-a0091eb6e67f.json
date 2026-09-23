@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "3e3d8f2b-5434-4e42-a0b5-a0091eb6e67f",
+  "path": "skills-installer",
+  "path_key": "skills-installer",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "JoshiMinh/agent-skills",
+    "subpath": "skills\\skills-installer",
+    "branch": null
+  }
+}

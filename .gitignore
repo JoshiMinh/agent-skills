@@ -18,3 +18,7 @@ pnpm-debug.log*
 
 # Local agent caches
 .skill-lock.json
+*.tmp
+.skills-manager.lock
+__pycache__/
+*.pyc

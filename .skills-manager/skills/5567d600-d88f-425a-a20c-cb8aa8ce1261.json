@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "5567d600-d88f-425a-a20c-cb8aa8ce1261",
+  "path": "monorepo-reusability",
+  "path_key": "monorepo-reusability",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "JoshiMinh/agent-skills",
+    "subpath": "skills\\monorepo-reusability",
+    "branch": null
+  }
+}
