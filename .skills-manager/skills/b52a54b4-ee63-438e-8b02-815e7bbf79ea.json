@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "b52a54b4-ee63-438e-8b02-815e7bbf79ea",
+  "path": "clean-code-refactor-2",
+  "path_key": "clean-code-refactor-2",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/JoshiMinh/agent-skills.git",
+    "subpath": "clean-code-refactor",
+    "branch": null
+  }
+}

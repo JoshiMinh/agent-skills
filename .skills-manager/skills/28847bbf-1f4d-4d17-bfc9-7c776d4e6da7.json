@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "28847bbf-1f4d-4d17-bfc9-7c776d4e6da7",
+  "path": "stackbase-license-2",
+  "path_key": "stackbase-license-2",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/JoshiMinh/agent-skills.git",
+    "subpath": "stackbase-license",
+    "branch": null
+  }
+}

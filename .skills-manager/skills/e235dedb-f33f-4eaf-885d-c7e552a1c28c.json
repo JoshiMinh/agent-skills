@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "e235dedb-f33f-4eaf-885d-c7e552a1c28c",
+  "path": "hallmark-2",
+  "path_key": "hallmark-2",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/JoshiMinh/agent-skills.git",
+    "subpath": "hallmark",
+    "branch": null
+  }
+}
