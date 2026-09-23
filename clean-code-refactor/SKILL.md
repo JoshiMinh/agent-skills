@@ -4,6 +4,7 @@ description: "Best practices and actionable rules for writing clean, minimal, ma
 metadata:
   author: stackbase
   version: "1.0.0"
+  tags: ["Refactoring", "TypeScript", "React"]
 ---
 
 # Clean Code & Minimal Refactoring

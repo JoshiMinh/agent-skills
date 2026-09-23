@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Agent Skills — Production-Grade AI Agent Skills</title>
   <meta name="description" content="Curated production-grade AI agent skills for Google Antigravity, Claude Code, Cursor, and open agent ecosystems.">
   
@@ -238,7 +241,7 @@
             <h3 id="modalTitle" class="font-bold text-base text-white">Skill Documentation</h3>
             <span id="modalBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/30">v1.0.0</span>
           </div>
-          <p id="modalPath" class="text-xs text-zinc-400 font-mono mt-0.5">skills/skill-name/SKILL.md</p>
+          <p id="modalPath" class="text-xs text-zinc-400 font-mono mt-0.5">skill-name/SKILL.md</p>
         </div>
         <div class="flex items-center gap-2">
           <button id="modalCopyBtn" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-xs font-medium text-zinc-200 rounded-lg border border-border transition-colors">
@@ -259,7 +262,7 @@
 
   <!-- Footer -->
   <footer class="border-t border-border py-6 px-4 text-center text-xs text-zinc-500 bg-surface">
-    <p>Agent Skills by <a href="https://github.com/JoshiMinh" target="_blank" class="text-zinc-400 hover:text-white underline">JoshiMinh</a> • Licensed under MIT</p>
+    <p>Agent Skills by <a href="https://github.com/JoshiMinh" target="_blank" class="text-zinc-400 hover:text-white underline">JoshiMinh</a></p>
   </footer>
 
   <!-- 100% Dynamic Direct Fetch & Parser -->
@@ -267,121 +270,105 @@
     const REPO_OWNER = 'JoshiMinh';
     const REPO_NAME = 'agent-skills';
 
-    // Known skills list fallback if GitHub API rate-limits
-    const KNOWN_SLUGS = [
-      'clean-code-refactor',
-      'monorepo-reusability',
-      'stackbase-license',
-      'web-extension-auditor',
-      'website-compliance-auditor'
-    ];
-
     let loadedSkills = [];
 
-    // Parse YAML frontmatter from raw markdown
+    function parseYamlValue(value) {
+      const trimmed = value.trim();
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          return JSON.parse(trimmed);
+        } catch (error) {
+          return trimmed.slice(1, -1).split(',').map(item => item.trim()).filter(Boolean);
+        }
+      }
+      if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+        return trimmed.slice(1, -1);
+      }
+      return trimmed;
+    }
+
     function parseFrontmatter(raw) {
       const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
       if (!match) {
         return { frontmatter: {}, body: raw };
       }
 
-      const yamlBlock = match[1];
-      const body = match[2];
       const frontmatter = {};
+      let section = null;
 
-      yamlBlock.split(/\r?\n/).forEach(line => {
+      match[1].split(/\r?\n/).forEach(line => {
+        if (!line.trim() || line.trimStart().startsWith('#')) return;
         const colonIdx = line.indexOf(':');
-        if (colonIdx > 0) {
-          const key = line.slice(0, colonIdx).trim();
-          let val = line.slice(colonIdx + 1).trim();
-          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-            val = val.slice(1, -1);
-          }
-          frontmatter[key] = val;
+        if (colonIdx <= 0) return;
+
+        const indented = /^\s/.test(line);
+        const key = line.slice(0, colonIdx).trim();
+        const value = line.slice(colonIdx + 1).trim();
+
+        if (!indented) {
+          section = value ? null : key;
+          frontmatter[key] = value ? parseYamlValue(value) : {};
+        } else if (section && typeof frontmatter[section] === 'object') {
+          frontmatter[section][key] = parseYamlValue(value);
         }
       });
 
-      return { frontmatter, body };
+      return { frontmatter, body: match[2] };
     }
 
-    // Try fetching with multiple URL fallback paths (Relative -> GitHub Raw -> CDN)
     async function fetchRawMarkdown(slug) {
-      const candidates = [
-        `./skills/${slug}/SKILL.md`,
-        `skills/${slug}/SKILL.md`,
-        `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/skills/${slug}/SKILL.md`,
-        `https://cdn.jsdelivr.net/gh/${REPO_OWNER}/${REPO_NAME}@main/skills/${slug}/SKILL.md`
-      ];
-
-      for (const url of candidates) {
-        try {
-          const res = await fetch(url);
-          if (res.ok) {
-            return await res.text();
-          }
-        } catch (e) {
-          // Try next candidate
-        }
-      }
-      throw new Error(`Could not fetch SKILL.md for ${slug}`);
+      const cacheBust = Date.now();
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${slug}/SKILL.md?v=${cacheBust}`;
+      const response = await fetch(url, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Could not fetch SKILL.md for ${slug}`);
+      return response.text();
     }
 
-    // Discover skill directories via GitHub API, or fallback to known list
     async function discoverSkillSlugs() {
-      try {
-        const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/skills`;
-        const res = await fetch(apiUrl);
-        if (res.ok) {
-          const items = await res.json();
-          return items.filter(i => i.type === 'dir').map(i => i.name);
-        }
-      } catch (e) {
-        console.warn('GitHub API discovery skipped, using catalog fallback');
-      }
-      return KNOWN_SLUGS;
+      const cacheBust = Date.now();
+      const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/main?recursive=1&v=${cacheBust}`;
+      const response = await fetch(apiUrl, {
+        cache: 'no-store',
+        headers: { Accept: 'application/vnd.github+json' }
+      });
+      if (!response.ok) throw new Error('Could not load the repository tree');
+
+      const data = await response.json();
+      return data.tree
+        .filter(item => item.type === 'blob' && /^[^/]+\/SKILL\.md$/.test(item.path))
+        .map(item => item.path.split('/')[0])
+        .sort();
     }
 
-    // Main fetch & render routine
     async function loadSkillsDirectly() {
-      const slugs = await discoverSkillSlugs();
-      const results = await Promise.all(
-        slugs.map(async (slug) => {
-          try {
-            const raw = await fetchRawMarkdown(slug);
-            const { frontmatter, body } = parseFrontmatter(raw);
-            
-            return {
-              slug: slug,
-              name: frontmatter.name || slug,
-              description: frontmatter.description || '',
-              version: (frontmatter.metadata && frontmatter.metadata.version) || '1.0.0',
-              author: (frontmatter.metadata && frontmatter.metadata.author) || 'JoshiMinh',
-              category: deriveCategory(slug, frontmatter.description || ''),
-              path: `skills/${slug}/SKILL.md`,
-              rawMarkdown: body,
-              html: marked.parse(body)
-            };
-          } catch (err) {
-            console.error(err);
-            return null;
-          }
-        })
-      );
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      try {
+        const slugs = await discoverSkillSlugs();
+        const results = await Promise.all(slugs.map(async (slug) => {
+          const raw = await fetchRawMarkdown(slug);
+          const { frontmatter, body } = parseFrontmatter(raw);
 
-      loadedSkills = results.filter(Boolean);
-      document.getElementById('loadingIndicator').classList.add('hidden');
-      document.getElementById('skillsGrid').classList.remove('hidden');
-      renderSkills();
-    }
+          return {
+            slug,
+            name: frontmatter.name || slug,
+            description: frontmatter.description || '',
+            version: frontmatter.metadata?.version || '1.0.0',
+            author: frontmatter.metadata?.author || 'JoshiMinh',
+            tags: Array.isArray(frontmatter.metadata?.tags) ? frontmatter.metadata.tags : [],
+            path: `${slug}/SKILL.md`,
+            rawMarkdown: body,
+            html: marked.parse(body)
+          };
+        }));
 
-    function deriveCategory(slug, desc) {
-      const text = (slug + ' ' + desc).toLowerCase();
-      if (text.includes('extension') || text.includes('manifest')) return 'WebExtension';
-      if (text.includes('refactor') || text.includes('clean code')) return 'Refactoring';
-      if (text.includes('monorepo') || text.includes('architecture') || text.includes('package')) return 'Architecture';
-      if (text.includes('license') || text.includes('copyright') || text.includes('proprietary')) return 'Compliance';
-      if (text.includes('compliance') || text.includes('accessibility') || text.includes('wcag') || text.includes('security')) return 'Security & Legal';
-      return 'Engineering';
+        loadedSkills = results;
+        loadingIndicator.classList.add('hidden');
+        document.getElementById('skillsGrid').classList.remove('hidden');
+        renderSkills();
+      } catch (error) {
+        console.error(error);
+        loadingIndicator.innerHTML = '<p>Could not load skills from GitHub. Reload to try again.</p>';
+      }
     }
 
     function renderSkills() {
@@ -399,7 +386,7 @@
       const filtered = loadedSkills.filter(skill => {
         return !query || 
           skill.name.toLowerCase().includes(query) || 
-          skill.category.toLowerCase().includes(query) || 
+          skill.tags.some(tag => tag.toLowerCase().includes(query)) ||
           skill.description.toLowerCase().includes(query) || 
           skill.rawMarkdown.toLowerCase().includes(query);
       });
@@ -414,13 +401,14 @@
 
       grid.innerHTML = filtered.map(skill => {
         const installCmd = `npx skills add ${REPO_OWNER}/${REPO_NAME} --skill ${skill.slug} --copy -y`;
+        const tags = skill.tags.map(tag => `
+          <span class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">${tag}</span>
+        `).join('');
         return `
           <div class="bg-surface border border-border hover:border-zinc-700 rounded-xl p-5 flex flex-col justify-between transition-all group shadow-sm hover:shadow-md">
             <div>
-              <div class="flex items-center justify-between gap-2 mb-2.5">
-                <span class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-                  ${skill.category}
-                </span>
+              <div class="flex items-start justify-between gap-2 mb-2.5">
+                <div class="flex flex-wrap gap-1.5">${tags}</div>
                 <span class="text-xs font-mono text-zinc-500">v${skill.version}</span>
               </div>
               <h3 class="font-bold text-base sm:text-lg text-white group-hover:text-blue-400 transition-colors mb-2">
@@ -480,7 +468,7 @@
       if (!skill) return;
 
       document.getElementById('modalTitle').innerText = skill.name;
-      document.getElementById('modalBadge').innerText = skill.category;
+      document.getElementById('modalBadge').innerText = skill.tags.join(' · ');
       document.getElementById('modalPath').innerText = skill.path;
       document.getElementById('modalContent').innerHTML = skill.html;
 

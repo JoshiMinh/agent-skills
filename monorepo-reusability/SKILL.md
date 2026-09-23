@@ -4,6 +4,7 @@ description: "Guidelines and best practices for monorepo package architecture, c
 metadata:
   author: stackbase
   version: "1.0.0"
+  tags: ["Monorepo", "Architecture", "Code Sharing"]
 ---
 
 # Monorepo Package Reusability & Cross-Platform Architecture

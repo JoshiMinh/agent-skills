@@ -4,6 +4,7 @@ description: "Proprietary software licensing, StackBase Inc. copyright complianc
 metadata:
   author: stackbase
   version: "1.0.0"
+  tags: ["Licensing", "Compliance", "Intellectual Property"]
 ---
 
 # StackBase License & IP Guardian

@@ -4,6 +4,7 @@ description: "Comprehensive WebExtension (Chrome MV3 & Firefox MV2/MV3) audit an
 metadata:
   author: JoshiMinh
   version: "2.0.0"
+  tags: ["WebExtension", "Manifest V3", "Security"]
 ---
 
 # Web Extension & Manifest Auditor (Chrome MV3 & Firefox MV2/MV3)

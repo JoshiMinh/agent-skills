@@ -1,6 +1,10 @@
 ---
 name: codebase-doctor
 description: Automated codebase health diagnostics. Detects unused exports, dead code, orphan files, duplicate dependencies, circular module imports, and broken asset links.
+metadata:
+  author: JoshiMinh
+  version: "1.0.0"
+  tags: ["Code Quality", "Dead Code", "Dependencies"]
 ---
 
 # Codebase Doctor — Health & Dead Code Diagnostic

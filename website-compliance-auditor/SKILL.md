@@ -4,6 +4,7 @@ description: "Comprehensive website compliance and audit skill covering WCAG 2.1
 metadata:
   author: JoshiMinh
   version: "2.0.0"
+  tags: ["Accessibility", "Privacy", "Security"]
 ---
 
 # Website Compliance & Accessibility Auditor
