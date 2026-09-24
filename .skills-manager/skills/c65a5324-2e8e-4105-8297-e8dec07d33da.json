@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "skill_id": "c65a5324-2e8e-4105-8297-e8dec07d33da",
-  "path": "skills\\web-extension-auditor",
-  "path_key": "skills\\web-extension-auditor",
+  "path": "skills/web-extension-auditor",
+  "path_key": "skills/web-extension-auditor",
   "enabled": true,
   "tags": [],
   "source": {

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "skill_id": "b52a54b4-ee63-438e-8b02-815e7bbf79ea",
-  "path": "skills\\clean-code-refactor",
-  "path_key": "skills\\clean-code-refactor",
+  "path": "skills/clean-code-refactor",
+  "path_key": "skills/clean-code-refactor",
   "enabled": true,
   "tags": [],
   "source": {

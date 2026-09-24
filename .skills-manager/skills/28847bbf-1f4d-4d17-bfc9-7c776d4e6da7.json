@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "skill_id": "28847bbf-1f4d-4d17-bfc9-7c776d4e6da7",
-  "path": "skills\\stackbase-license",
-  "path_key": "skills\\stackbase-license",
+  "path": "skills/stackbase-license",
+  "path_key": "skills/stackbase-license",
   "enabled": true,
   "tags": [],
   "source": {

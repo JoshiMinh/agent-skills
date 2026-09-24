@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "skill_id": "21318847-59cd-460e-adf7-d3818d40cfa3",
-  "path": "skills\\frontend-ui-engineering",
-  "path_key": "skills\\frontend-ui-engineering",
+  "path": "skills/frontend-ui-engineering",
+  "path_key": "skills/frontend-ui-engineering",
   "enabled": true,
   "tags": [],
   "source": {
