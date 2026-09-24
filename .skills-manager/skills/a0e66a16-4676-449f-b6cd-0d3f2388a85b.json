@@ -6,9 +6,9 @@
   "enabled": true,
   "tags": [],
   "source": {
-    "type": "git",
-    "ref": "https://github.com/JoshiMinh/agent-skills.git",
-    "subpath": "skills\\website-compliance-auditor",
+    "type": "local",
+    "ref": null,
+    "subpath": null,
     "branch": null
   }
 }
