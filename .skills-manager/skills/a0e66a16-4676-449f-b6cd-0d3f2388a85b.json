@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "a0e66a16-4676-449f-b6cd-0d3f2388a85b",
+  "path": "skills\\website-compliance-auditor",
+  "path_key": "skills\\website-compliance-auditor",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/JoshiMinh/agent-skills.git",
+    "subpath": "skills\\website-compliance-auditor",
+    "branch": null
+  }
+}
