@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "ef575bad-4e78-441e-ad83-d73cfefce72b",
+  "path": "codebase-doctor",
+  "path_key": "codebase-doctor",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "local",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}
