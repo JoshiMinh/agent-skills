@@ -1,9 +1,9 @@
 ---
 name: web-extension-auditor
-description: "Comprehensive WebExtension (Chrome MV3 & Firefox MV2/MV3) audit and optimization skill. Covers Manifest V3/V2 compliance, Content Security Policy (CSP), host permission minimization, content script sandbox isolation (Shadow DOM & CSS scoping), stateless background service workers & typed IPC, bundle size budgets, tree-shaking (icons/dictionaries), dynamic chunk splitting (React.lazy), IndexedDB vs chrome.storage persistence, memory leak lifecycle hygiene, and Chrome Web Store / Firefox AMO review readiness."
+description: Audit Chrome or Firefox WebExtensions for manifest compatibility, permission scope, CSP, content-script isolation, service-worker lifecycle, storage, bundle size, and store readiness. Use for an explicit extension audit or review, not ordinary extension implementation.
 metadata:
   author: JoshiMinh
-  version: "2.0.0"
+  version: "2.1.0"
   tags: ["WebExtension", "Manifest V3", "Security"]
 ---
 
@@ -14,6 +14,8 @@ A production-grade engineering and audit skill for auditing, optimizing, and cer
 ---
 
 ## Audit Principles
+
+Every PASS must cite inspected source or observed runtime evidence. Use NOT CHECKED when required tooling, a build artifact, browser access, or store metadata is unavailable. Never infer runtime behavior from static code alone.
 
 1. **Dual-Target Manifest Parity**: Evaluate compatibility across Chromium (Manifest V3 service workers, declarativeNetRequest) and Firefox (Manifest V2/MV3 background scripts, storage).
 2. **Context-Aware Sandboxing**: Ensure content scripts run in isolated worlds, encapsulate styling via Shadow DOM, and interact with host page scripts only via explicit messaging or bridge interfaces.
@@ -198,15 +200,15 @@ When performing an extension audit, execute these diagnostic phases:
 ### Static Audit Inspection Commands
 - Search for unescaped / uncleaned window listeners:
   ```bash
-  grep -rn "addEventListener" --include="*.ts" --include="*.tsx" src/
+  rg -n "addEventListener" src -g "*.ts" -g "*.tsx"
   ```
 - Search for forbidden `eval` or remote script execution:
   ```bash
-  grep -rn "eval(" --include="*.ts" --include="*.tsx" src/
+  rg -n -F "eval(" src -g "*.ts" -g "*.tsx"
   ```
 - Search for hardcoded asset paths:
   ```bash
-  grep -rn "\"/assets/" --include="*.ts" --include="*.tsx" src/
+  rg -n -F '"/assets/' src -g "*.ts" -g "*.tsx"
   ```
 - Analyze bundle build sizes:
   ```bash

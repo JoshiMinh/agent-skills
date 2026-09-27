@@ -1,13 +1,15 @@
 ---
 name: stackbase-license
-description: "Proprietary software licensing, StackBase Inc. copyright compliance, third-party open-source dependency auditing, and intellectual property protection across StackBase repositories."
+description: Review StackBase repositories for project copyright policy and third-party dependency license risk. Use for requested license or intellectual-property reviews; do not treat the skill as legal advice or as a general security audit.
 metadata:
   author: stackbase
-  version: "1.0.0"
+  version: "1.1.0"
   tags: ["Licensing", "Compliance", "Intellectual Property"]
 ---
 
 # StackBase License & IP Guardian
+
+This skill provides engineering review guidance, not legal advice. Report uncertain, dual-licensed, custom, or weak-copyleft cases for human legal review instead of declaring them permitted or prohibited.
 
 Standards for proprietary intellectual property protection, copyright notices, and third-party open-source license compliance across StackBase repositories.
 
@@ -18,7 +20,7 @@ Standards for proprietary intellectual property protection, copyright notices, a
 All source code across StackBase repositories (`WatchBase`, `RateBase`, `TaskBase`, `MarkBase`, `WriteBase`) is proprietary and confidential to **StackBase Inc.** / **TheBase Platforms LLC**.
 
 ### Standard Copyright Header
-When creating new source files, major modules, or standalone packages, include the proprietary notice comment at the top where applicable:
+Preserve existing notices. Add a notice to new files only when the repository's current policy or templates require one; do not infer a requirement from this example alone:
 
 ```typescript
 /**
@@ -48,11 +50,9 @@ To protect StackBase's proprietary source code from accidental open-source copyl
 
 ---
 
-## 3. Secret & Credential Leakage Protection
+## 3. Scope Boundary: Secrets
 
-- **No Hardcoded Secrets**: Never commit API keys, service role keys, webhook signing secrets, database passwords, or private SSH keys.
-- **Environment Isolation**: Always use `.env.example` templates with empty placeholders (`SUPABASE_SERVICE_ROLE_KEY=`) and keep actual secrets inside `.env.local` (which must be ignored in `.gitignore`).
-- **Client Bundle Safety**: Only environment variables explicitly prefixed with public markers (e.g. `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`) are exposed to client browsers. Never expose backend admin credentials to the client.
+If license inspection reveals an obvious secret, report it immediately, but leave comprehensive secret scanning and remediation to a security review. Do not expand a licensing request into a general security audit.
 
 ---
 

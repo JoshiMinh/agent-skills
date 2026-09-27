@@ -4,7 +4,7 @@
   "path": "codebase-doctor",
   "path_key": "codebase-doctor",
   "enabled": true,
-  "tags": [],
+  "tags": ["Licensing", "Compliance", "Intellectual Property"],
   "source": {
     "type": "local",
     "ref": null,

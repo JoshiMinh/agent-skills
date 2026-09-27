@@ -10,3 +10,9 @@ Browse the catalog at [joshiminh.github.io/agent-skills](https://joshiminh.githu
 ```sh
 npx skills add JoshiMinh/agent-skills --copy -y
 ```
+
+Validate the catalog after changing skills or Skills Manager metadata:
+
+```sh
+python scripts/validate_catalog.py
+```

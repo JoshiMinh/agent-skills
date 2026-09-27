@@ -1,15 +1,15 @@
 ---
 name: clean-code-refactor
-description: "Best practices and actionable rules for writing clean, minimal, maintainable, and high-performance TypeScript/React code. Triggers for: code refactoring, dead code elimination, reducing cognitive complexity, preventing wrapper/abstraction bloat, optimizing control flow, and keeping file sizing modular."
+description: Refactor TypeScript and React code for clarity, maintainability, and simpler state flow. Use for requested refactors, dead-code removal, complexity reduction, or React state cleanup; do not apply as a generic review of other languages.
 metadata:
   author: stackbase
-  version: "1.0.0"
+  version: "1.1.0"
   tags: ["Refactoring", "TypeScript", "React"]
 ---
 
-# Clean Code & Minimal Refactoring
+# TypeScript and React Refactoring
 
-Architectural guide and checklist for maintaining lean, readable, and robust TypeScript/React codebases across StackBase applications.
+Improve existing TypeScript or React code while preserving behavior and the project's established architecture.
 
 ---
 
@@ -20,7 +20,12 @@ Architectural guide and checklist for maintaining lean, readable, and robust Typ
    - Avoid "pass-through" functions or components whose only job is to forward arguments to another function.
    - Resist building generic frameworks for one-off features. Three concrete implementations are better than one premature abstraction.
 
-2. **File & Function Size Budgets**
+2. **Complexity before size**
+   - Treat file and function length as a prompt to inspect cohesion, not as a failure by itself.
+   - Split code when responsibilities, change reasons, or test boundaries are genuinely distinct.
+   - Do not extract pass-through helpers merely to meet a line-count target.
+
+   Suggested size ranges below are diagnostic signals, not acceptance criteria.
    - **Functions**: Target $\le$ 30–40 lines of focused logic.
    - **Components**: Target $\le$ 150–250 lines per file. Break complex sub-sections into colocated sub-components.
    - **Files**: If a file exceeds 300 lines, evaluate splitting domain types, helpers, or hooks into separate modules.

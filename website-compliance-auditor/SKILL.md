@@ -1,9 +1,9 @@
 ---
 name: website-compliance-auditor
-description: "Comprehensive website compliance and audit skill covering WCAG 2.1/2.2 AA accessibility, GDPR/CCPA privacy and cookie consent, consumer protection, legal terms, web security headers, and trust verification. Triggers for: website audits, accessibility checks (a11y), contrast ratios, keyboard navigation, cookie consent banners, privacy policies, terms of service, refund policies, tracking scripts audit, and security headers (CSP/HSTS)."
+description: Audit a website for accessibility, privacy and consent behavior, consumer disclosures, and security-header hygiene. Use for an explicit website compliance review; distinguish engineering evidence from legal conclusions and do not activate for ordinary UI work.
 metadata:
   author: JoshiMinh
-  version: "2.0.0"
+  version: "2.1.0"
   tags: ["Accessibility", "Privacy", "Security"]
 ---
 
@@ -14,6 +14,8 @@ A production-grade audit skill to evaluate websites and web applications for **A
 ---
 
 ## Audit Principles
+
+Every PASS must cite inspected source or observed browser/network evidence. Use NOT CHECKED when live behavior, jurisdiction, policy text, or deployment headers cannot be verified. Clearly label legal interpretations as review items rather than definitive legal advice.
 
 1. **Practical & Context-Aware**: Only evaluate checks that apply to the current website (e.g., do not flag missing refund policies on open-source landing pages or non-commercial blogs).
 2. **Actionable Remediation**: Every warning or failure must include a precise explanation and a copy-pasteable code fix (React/Next.js, HTML, CSS/Tailwind, or config).
@@ -154,15 +156,15 @@ When auditing a page, component, or repository, follow this hybrid methodology:
 ### Static Code Check Commands
 - Search for icon buttons without accessible names:
   ```bash
-  grep -rn "<button" --include="*.tsx"
+  rg -n "<button" -g "*.tsx"
   ```
 - Search for missing image alt tags:
   ```bash
-  grep -rn "<img" --include="*.tsx"
+  rg -n "<img" -g "*.tsx"
   ```
 - Search for outline suppression:
   ```bash
-  grep -rn "outline-none" --include="*.tsx"
+  rg -n "outline-none" -g "*.tsx"
   ```
 
 ---

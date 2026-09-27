@@ -1,9 +1,9 @@
 ---
 name: monorepo-reusability
-description: "Guidelines and best practices for monorepo package architecture, cross-platform code sharing (Web, Expo Mobile, Browser Extension), DRY abstractions, and workspace dependency management in StackBase monorepos."
+description: Review or refactor JavaScript and TypeScript monorepo boundaries, shared packages, cross-platform code, and workspace dependencies. Use when code is shared across two or more real consumers; do not force a monorepo or extract one-off code.
 metadata:
   author: stackbase
-  version: "1.0.0"
+  version: "1.1.0"
   tags: ["Monorepo", "Architecture", "Code Sharing"]
 ---
 
@@ -15,7 +15,7 @@ Engineering manual for designing modular, DRY, and cross-platform shared package
 
 ## 1. Monorepo Layering Matrix
 
-All code within the monorepo must respect a strict unidirectional dependency graph:
+First inspect the repository's existing workspace layout, consumers, build tools, and public APIs. Use the following graph as a common StackBase pattern, not as a mandatory shape:
 
 ```
 [apps/web]      [apps/mobile]      [apps/extension]
@@ -30,7 +30,7 @@ All code within the monorepo must respect a strict unidirectional dependency gra
              [@<repo>/types]
 ```
 
-1. **`@<repo>/types` (Level 0 - Foundation)**:
+1. **`@<repo>/types` (Level 0 - Foundation, when independently reused)**:
    - Pure TypeScript types and interfaces.
    - Zero runtime JavaScript dependencies.
    - No React, Node.js, or platform-specific dependencies.
@@ -61,6 +61,8 @@ All code within the monorepo must respect a strict unidirectional dependency gra
 ---
 
 ## 3. Package Reusability Checklist
+
+Recommend extraction only when at least two independent consumers need the same stable behavior. Preserve framework-specific code in its owning app unless sharing produces a clearer API and lower total maintenance cost.
 
 - [ ] Does the shared package have a single, well-defined responsibility?
 - [ ] Are types placed in `@<repo>/types` without bundling unnecessary runtime dependencies?
